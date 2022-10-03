@@ -1,7 +1,9 @@
-//import css from '../index.module.css';
-//import { Dna } from 'react-loader-spinner';
+import css from '../index.module.css';
+import { InfinitySpin } from 'react-loader-spinner';
 
 
-//export const PendingView = () => {
- //   return <div className={css.pendingName}><Dna/> <div>Enter search Value</div><Dna/> </div>
-//}
+ const PendingView = () => {
+    return <div className={css.PendingView}><InfinitySpin /> <div>Enter search Value</div><InfinitySpin /> </div>
+}
+
+export default PendingView;

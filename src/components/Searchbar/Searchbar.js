@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import css from '../index.module.css'
+import css from './Searchbar.module.css'
 import { BsSearch } from 'react-icons/bs'
 import { toast } from 'react-toastify';
 
@@ -31,7 +31,7 @@ export default class Searchbar extends Component {
             <header className={css.Searchbar} onSubmit={this.handleSubmit}>
                 <form className={css.SearchForm}>
                     <button type="submit" className={css.SearchFormButton}>
-                        <span className={css.SearchFormButtonLabel}><BsSearch></BsSearch></span>
+                        <span className={css.SearchFormButtonLabel}><BsSearch className={css.Icon}></BsSearch></span>
                     </button>
                     <input
                         className={css.SearchFormInput}

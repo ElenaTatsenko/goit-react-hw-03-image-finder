@@ -5,10 +5,11 @@ import { fetchItems } from '../services/api'
 
 import Searchbar from "./Searchbar/Searchbar";
 import ImageGallery from "./ImageGallery/ImageGallery"
-import { Button } from "./Button/Button"
-//import { Loader } from "./Loader/Loader"
-//import { ErrorView } from "./ErrorView/ErrorView";
-//import { PendingView } from "./PendingView/PendingView";
+import  Button  from "./Button/Button"
+import  Loader  from "./Loader/Loader"
+import  ErrorView  from "./ErrorView/ErrorView";
+import PendingView from "./PendingView/PendingView";
+
 
 
 
@@ -23,10 +24,25 @@ export default class App extends Component {
     loading: false,
     page: 1,
     perPage: 12,
-    isLoadMore: true,
+    loadMore: true,
     error: null
   }
-  handleFormSubmit = imageName => this.setState({ imageName });
+  handleFormSubmit = imageName => {
+    if (imageName === this.state.imageName) {
+        toast.error("Enter new search value or press 'Load More' !");
+        return
+      }
+    
+        return this.setState({
+          imageName, 
+          items: {
+            hits: [],
+            totalHits: '',
+            total: '',
+        },
+          page: 1,
+        });
+  };
 
   componentDidUpdate(prevProps, prevState) {
     const { imageName, page, perPage } = this.state
@@ -35,9 +51,9 @@ export default class App extends Component {
 
 
     if (prevName !== nextName ||
-      prevState.page !== this.state.page) {
+      prevState.page !==  page) {
     
-      this.setState({ loading: true, error: null})
+      this.setState({ loading: true, error: null, })
 
        fetchItems(imageName, page, perPage)
         .then(({ hits, totalHits, total }) => {
@@ -57,12 +73,12 @@ export default class App extends Component {
           
         if (hits.length !== 0 && page === 1 ) {
           toast.success(`Founded ${totalHits} images`);
-          this.setState({isLoadMore: true,})
+          this.setState({loadMore: true,})
         }
 
         if (page === totalPages) {
-          toast.info("The End!");
-          this.setState({isLoadMore: false,})
+          toast.info("No more results");
+          this.setState({loadMore: false,})
         }
 
 
@@ -73,7 +89,8 @@ export default class App extends Component {
         .catch(error => {
           this.setState({ error })
           Promise.reject(new Error(`${error.message}`))
-          toast.error(` We can't find a "${imageName}"! `);
+          toast.error(`No results for "${imageName}"! `);
+          
         })
     }
   }
@@ -89,17 +106,16 @@ export default class App extends Component {
 
         {this.state.items.hits.length !== 0 && <>
           <ImageGallery items={this.state.items.hits} />
-          {this.state.isLoadMore && <Button onClick={this.loadMore} />}
+          {this.state.loadMore && <Button onClick={this.loadMore} />}
+          {this.state.items.hits.length === 0 && !this.state.loading && <PendingView />}
+          {this.state.loading && <Loader />}
         </>}
         
-       <ToastContainer />
+      {this.state.error && <ErrorView errorName={this.state.error.message} />}
+       <ToastContainer autoClose={2000} />
     </>
   );
   }
   
 };
- //{ this.state.items.hits.length === 0 && !this.state.isLoading && <PendingView />}
-//      {this.state.isLoading && <Loader />}
- //     {this.state.error && <ErrorView errorName={this.state.error.message} />}
- //       
-      
+    
